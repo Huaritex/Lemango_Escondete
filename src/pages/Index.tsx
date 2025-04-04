@@ -12,7 +12,7 @@ const Index = () => {
       <div className="min-h-screen bg-game-dark text-game-light flex flex-col items-center justify-center p-4">
         <div className="max-w-md w-full space-y-8 animate-slide-up">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-game-light mb-2">Cazador Oculto</h1>
+            <h1 className="text-4xl font-bold text-game-light mb-2">Lemango Escóndete</h1>
             <p className="text-lg text-gray-400">Un juego de escondite por turnos</p>
           </div>
           
