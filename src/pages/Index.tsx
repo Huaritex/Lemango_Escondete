@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { GameProvider } from "@/contexts/GameContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, Book, Gamepad, User, HelpCircle } from "lucide-react";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const Index = () => {
   return (
     <GameProvider>
-      <div className="min-h-screen bg-game-dark text-game-light flex flex-col items-center justify-center p-4">
-        <div className="max-w-md w-full space-y-8 animate-slide-up">
+      <div className="min-h-screen bg-game-dark text-game-light flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        <AnimatedBackground />
+        <div className="max-w-md w-full space-y-8 animate-slide-up relative z-10">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-game-light mb-2">Lemango Escóndete</h1>
             <p className="text-lg text-gray-400">Un juego de escondite por turnos</p>
