@@ -24,7 +24,7 @@ import Map from "@/components/game/Map";
 import Timer from "@/components/game/Timer";
 import Shop from "@/components/game/Shop";
 import PlayerInventory from "@/components/game/PlayerInventory";
-import { Home, Eye, EyeOff, SkipForward, HelpCircle, ArrowRight } from "lucide-react";
+import { Home, Eye, EyeOff, SkipForward, HelpCircle, ArrowRight, MousePointer, MoveRight } from "lucide-react";
 
 const Game = () => {
   const { 
@@ -39,6 +39,9 @@ const Game = () => {
   
   const [tutorialOpen, setTutorialOpen] = useState(true);
   const [tutorialStep, setTutorialStep] = useState(0);
+  
+  // Sample board for tutorial visualization
+  const sampleBoard = Array(5).fill(Array(5).fill(null));
   
   const tutorialSteps = [
     {
@@ -67,6 +70,43 @@ const Game = () => {
             <li>En cada turno puedes moverte una casilla en cualquier dirección (horizontal o vertical).</li>
             <li>Para moverte, haz clic en una casilla adyacente a tu posición actual.</li>
           </ul>
+          
+          {/* Visual example of how to move on the map */}
+          <div className="mt-4 bg-black/40 p-3 rounded-md">
+            <p className="text-sm font-medium mb-2">Ejemplo de Movimiento:</p>
+            <div className="grid grid-cols-5 gap-1 mb-3">
+              {sampleBoard.map((row, y) => (
+                <React.Fragment key={`row-${y}`}>
+                  {row.map((_, x) => (
+                    <div
+                      key={`cell-${x}-${y}`}
+                      className={`w-10 h-10 flex items-center justify-center border border-gray-700 rounded-sm ${
+                        (x === 0 && y === 0) 
+                          ? 'bg-game-hider text-white' 
+                          : (x === 4 && y === 4) 
+                          ? 'bg-game-seeker text-white'
+                          : (x === 1 && y === 0) 
+                          ? 'bg-yellow-500/30 border-yellow-500'
+                          : 'bg-gray-800/40'
+                      }`}
+                    >
+                      {(x === 0 && y === 0) ? 'E' : (x === 4 && y === 4) ? 'B' : ''}
+                    </div>
+                  ))}
+                </React.Fragment>
+              ))}
+            </div>
+            <div className="flex items-center text-sm text-gray-300">
+              <div className="flex items-center">
+                <MousePointer className="h-4 w-4 mr-1" /> 
+                <span>Haz clic en una casilla adyacente</span>
+              </div>
+              <MoveRight className="mx-2 h-4 w-4" />
+              <div className="w-6 h-6 flex items-center justify-center rounded-sm bg-yellow-500/30 border border-yellow-500">
+              </div>
+              <span className="ml-2">Casilla válida para moverte</span>
+            </div>
+          </div>
         </div>
       )
     },
@@ -82,6 +122,28 @@ const Game = () => {
             <li>El <span className="text-game-hider font-medium">Escondido</span> puede usar objetos para mantenerse oculto.</li>
             <li>El <span className="text-game-seeker font-medium">Buscador</span> puede usar objetos para encontrar al escondido.</li>
           </ul>
+          
+          {/* Visual example of the shop */}
+          <div className="mt-4 bg-black/40 p-3 rounded-md">
+            <p className="text-sm font-medium mb-2">Ejemplo de Objetos:</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="border border-gray-700 p-2 rounded-md bg-gray-800/50">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="font-medium text-game-hider">Humo</span>
+                  <span className="text-xs bg-gray-700 px-2 py-0.5 rounded">5 pts</span>
+                </div>
+                <p className="text-xs text-gray-300">Te vuelve invisible por un turno</p>
+              </div>
+              <div className="border border-gray-700 p-2 rounded-md bg-gray-800/50">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="font-medium text-game-seeker">Radar</span>
+                  <span className="text-xs bg-gray-700 px-2 py-0.5 rounded">10 pts</span>
+                </div>
+                <p className="text-xs text-gray-300">Detecta al jugador en un radio de 3 casillas</p>
+              </div>
+            </div>
+            <p className="text-sm mt-3">Haz clic en un objeto para comprarlo y luego podrás usarlo durante tu turno.</p>
+          </div>
         </div>
       )
     },
@@ -102,6 +164,56 @@ const Game = () => {
             <li>Usa objetos como el radar para localizar al escondido.</li>
             <li>Cubre el mapa de forma sistemática.</li>
           </ul>
+          
+          {/* Visual example of winning conditions */}
+          <div className="mt-4 bg-black/40 p-3 rounded-md">
+            <p className="text-sm font-medium mb-2">Ejemplo de victoria:</p>
+            <div className="flex space-x-4">
+              <div className="flex-1 border border-gray-700 p-2 rounded-md bg-gray-800/50">
+                <p className="text-sm font-medium text-game-hider mb-2">Victoria del Escondido</p>
+                <div className="text-xs text-gray-300">
+                  Se logra cuando el tiempo se acaba (16 turnos) y el buscador no te ha encontrado
+                </div>
+                <div className="text-center mt-2">
+                  <div className="inline-block px-2 py-1 bg-green-500/20 border border-green-500 text-green-400 rounded text-xs">
+                    ¡Supervivencia exitosa!
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 border border-gray-700 p-2 rounded-md bg-gray-800/50">
+                <p className="text-sm font-medium text-game-seeker mb-2">Victoria del Buscador</p>
+                <div className="text-xs text-gray-300">
+                  Se logra cuando encuentras al escondido moviéndote a su misma casilla
+                </div>
+                <div className="text-center mt-2">
+                  <div className="inline-block px-2 py-1 bg-green-500/20 border border-green-500 text-green-400 rounded text-xs">
+                    ¡Lo encontraste!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "¡Hora de Jugar!",
+      description: "Ya estás listo para comenzar.",
+      content: (
+        <div className="space-y-4">
+          <p>Ahora que conoces las reglas básicas, ¡es hora de jugar!</p>
+          <div className="bg-black/40 p-3 rounded-md">
+            <p className="text-sm font-medium mb-2">Recuerda:</p>
+            <ul className="list-disc pl-5 space-y-1 text-sm">
+              <li>Muévete una casilla por turno</li>
+              <li>Compra objetos para obtener ventajas</li>
+              <li>El escondido debe sobrevivir 16 turnos</li>
+              <li>El buscador debe encontrar al escondido</li>
+            </ul>
+            <div className="mt-3 text-center">
+              <p className="text-yellow-400">¡Buena suerte!</p>
+            </div>
+          </div>
         </div>
       )
     }
