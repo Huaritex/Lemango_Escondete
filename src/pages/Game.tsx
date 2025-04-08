@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,12 +11,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useGame } from "@/contexts/GameContext";
 import Map from "@/components/game/Map";
 import Timer from "@/components/game/Timer";
 import Shop from "@/components/game/Shop";
 import PlayerInventory from "@/components/game/PlayerInventory";
-import { Home, Eye, EyeOff, SkipForward } from "lucide-react";
+import { Home, Eye, EyeOff, SkipForward, HelpCircle, ArrowRight } from "lucide-react";
 
 const Game = () => {
   const { 
@@ -29,9 +37,125 @@ const Game = () => {
     resetGame
   } = useGame();
   
+  const [tutorialOpen, setTutorialOpen] = useState(true);
+  const [tutorialStep, setTutorialStep] = useState(0);
+  
+  const tutorialSteps = [
+    {
+      title: "¡Bienvenido a Lemango Escóndete!",
+      description: "Un juego de escondite por turnos donde un jugador se esconde y otro lo busca.",
+      content: (
+        <div className="space-y-4">
+          <p>En Lemango Escóndete jugarás por turnos con las siguientes reglas:</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Un jugador será el <span className="text-game-hider font-medium">Escondido</span> y otro el <span className="text-game-seeker font-medium">Buscador</span>.</li>
+            <li>El juego termina cuando el buscador encuentra al escondido o después de 16 turnos (8 minutos).</li>
+            <li>Cada turno dura 30 segundos.</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "El Mapa y Movimiento",
+      description: "Aprende a moverte por el mapa.",
+      content: (
+        <div className="space-y-4">
+          <p>El juego se desarrolla en un mapa cuadriculado:</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>El <span className="text-game-hider font-medium">Escondido</span> comienza en la esquina superior izquierda.</li>
+            <li>El <span className="text-game-seeker font-medium">Buscador</span> comienza en la esquina inferior derecha.</li>
+            <li>En cada turno puedes moverte una casilla en cualquier dirección (horizontal o vertical).</li>
+            <li>Para moverte, haz clic en una casilla adyacente a tu posición actual.</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "La Tienda",
+      description: "Usa objetos para ganar ventaja.",
+      content: (
+        <div className="space-y-4">
+          <p>Durante el juego puedes comprar objetos en la tienda:</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Usa puntos para comprar objetos que te dan ventajas.</li>
+            <li>Cada objeto tiene un tiempo de espera (cooldown) antes de poder usarlo nuevamente.</li>
+            <li>El <span className="text-game-hider font-medium">Escondido</span> puede usar objetos para mantenerse oculto.</li>
+            <li>El <span className="text-game-seeker font-medium">Buscador</span> puede usar objetos para encontrar al escondido.</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "Cómo Ganar",
+      description: "Objetivos para cada jugador.",
+      content: (
+        <div className="space-y-4">
+          <p><strong className="text-game-hider">Si eres el Escondido:</strong></p>
+          <ul className="list-disc pl-5 mb-4">
+            <li>Sobrevive durante los 16 turnos sin ser encontrado.</li>
+            <li>Usa objetos para despistar al buscador.</li>
+            <li>Evita patrones de movimiento predecibles.</li>
+          </ul>
+          <p><strong className="text-game-seeker">Si eres el Buscador:</strong></p>
+          <ul className="list-disc pl-5">
+            <li>Encuentra al escondido antes de que terminen los 16 turnos.</li>
+            <li>Usa objetos como el radar para localizar al escondido.</li>
+            <li>Cubre el mapa de forma sistemática.</li>
+          </ul>
+        </div>
+      )
+    }
+  ];
+  
+  const closeTutorial = () => {
+    setTutorialOpen(false);
+  };
+  
+  const nextTutorialStep = () => {
+    if (tutorialStep < tutorialSteps.length - 1) {
+      setTutorialStep(tutorialStep + 1);
+    } else {
+      closeTutorial();
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-game-dark text-game-light p-4">
       <div className="max-w-4xl mx-auto">
+        {/* Tutorial Dialog */}
+        <Dialog open={tutorialOpen && gamePhase === "setup"} onOpenChange={closeTutorial}>
+          <DialogContent className="bg-black/90 border-gray-700 text-game-light max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-xl flex items-center">
+                <HelpCircle className="mr-2 h-5 w-5 text-yellow-500" />
+                {tutorialSteps[tutorialStep].title}
+              </DialogTitle>
+              <DialogDescription className="text-gray-400">
+                {tutorialSteps[tutorialStep].description}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              {tutorialSteps[tutorialStep].content}
+            </div>
+            <DialogFooter>
+              <div className="flex justify-between w-full">
+                <span className="text-sm text-gray-500">
+                  Paso {tutorialStep + 1} de {tutorialSteps.length}
+                </span>
+                <Button onClick={nextTutorialStep}>
+                  {tutorialStep === tutorialSteps.length - 1 ? (
+                    "Comenzar Juego"
+                  ) : (
+                    <>
+                      Siguiente <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        
         {/* Header with navigation and game info */}
         <div className="flex justify-between items-center mb-4">
           <Link to="/">
@@ -60,7 +184,7 @@ const Game = () => {
         {gamePhase === "setup" && (
           <Card className="mb-8 bg-black/40 backdrop-blur-sm border-gray-800 text-game-light">
             <CardHeader>
-              <CardTitle>¡Bienvenido a Cazador Oculto!</CardTitle>
+              <CardTitle>¡Bienvenido a Lemango Escóndete!</CardTitle>
               <CardDescription>
                 Un juego de escondite por turnos. El escondido debe evitar ser encontrado por el buscador durante 8 minutos (16 turnos).
               </CardDescription>
@@ -73,8 +197,12 @@ const Game = () => {
                 Compra objetos en la tienda para ayudarte en tu misión. El escondido comienza en la esquina superior izquierda y el buscador en la esquina inferior derecha.
               </p>
             </CardContent>
-            <CardFooter>
-              <Button onClick={startGame} className="w-full">
+            <CardFooter className="flex justify-between">
+              <Button variant="outline" onClick={() => setTutorialOpen(true)}>
+                <HelpCircle className="mr-2 h-4 w-4" />
+                Tutorial
+              </Button>
+              <Button onClick={startGame}>
                 Comenzar Juego
               </Button>
             </CardFooter>
