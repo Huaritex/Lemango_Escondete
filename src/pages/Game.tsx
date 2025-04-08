@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -40,8 +39,29 @@ const Game = () => {
   const [tutorialOpen, setTutorialOpen] = useState(true);
   const [tutorialStep, setTutorialStep] = useState(0);
   
-  // Sample board for tutorial visualization
   const sampleBoard = Array(5).fill(Array(5).fill(null));
+  
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.code === 'Space' && gamePhase === 'playing') {
+        endTurn();
+        
+        const skipButton = document.querySelector('[data-skip-turn]');
+        if (skipButton) {
+          skipButton.classList.add('animate-pulse');
+          setTimeout(() => {
+            skipButton.classList.remove('animate-pulse');
+          }, 300);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [gamePhase, endTurn]);
   
   const tutorialSteps = [
     {
@@ -71,7 +91,6 @@ const Game = () => {
             <li>Para moverte, haz clic en una casilla adyacente a tu posición actual.</li>
           </ul>
           
-          {/* Visual example of how to move on the map */}
           <div className="mt-4 bg-black/40 p-3 rounded-md">
             <p className="text-sm font-medium mb-2">Ejemplo de Movimiento:</p>
             <div className="grid grid-cols-5 gap-1 mb-3">
@@ -123,7 +142,6 @@ const Game = () => {
             <li>El <span className="text-game-seeker font-medium">Buscador</span> puede usar objetos para encontrar al escondido.</li>
           </ul>
           
-          {/* Visual example of the shop */}
           <div className="mt-4 bg-black/40 p-3 rounded-md">
             <p className="text-sm font-medium mb-2">Ejemplo de Objetos:</p>
             <div className="grid grid-cols-2 gap-2">
@@ -165,7 +183,6 @@ const Game = () => {
             <li>Cubre el mapa de forma sistemática.</li>
           </ul>
           
-          {/* Visual example of winning conditions */}
           <div className="mt-4 bg-black/40 p-3 rounded-md">
             <p className="text-sm font-medium mb-2">Ejemplo de victoria:</p>
             <div className="flex space-x-4">
@@ -234,7 +251,6 @@ const Game = () => {
   return (
     <div className="min-h-screen bg-game-dark text-game-light p-4">
       <div className="max-w-4xl mx-auto">
-        {/* Tutorial Dialog */}
         <Dialog open={tutorialOpen && gamePhase === "setup"} onOpenChange={closeTutorial}>
           <DialogContent className="bg-black/90 border-gray-700 text-game-light max-w-lg">
             <DialogHeader>
@@ -268,7 +284,6 @@ const Game = () => {
           </DialogContent>
         </Dialog>
         
-        {/* Header with navigation and game info */}
         <div className="flex justify-between items-center mb-4">
           <Link to="/">
             <Button variant="ghost" size="sm">
@@ -323,7 +338,6 @@ const Game = () => {
         
         {gamePhase === "playing" && (
           <>
-            {/* Game info */}
             <div className="mb-4">
               <Card className="bg-black/40 backdrop-blur-sm border-gray-800 text-game-light">
                 <CardContent className="pt-4">
@@ -338,9 +352,14 @@ const Game = () => {
                           : "Encuentra al escondido"}
                       </p>
                     </div>
-                    <Button onClick={endTurn} size="sm" variant="outline">
+                    <Button 
+                      onClick={endTurn} 
+                      size="sm" 
+                      variant="outline"
+                      data-skip-turn
+                    >
                       <SkipForward className="h-4 w-4 mr-1" />
-                      Pasar Turno
+                      Pasar Turno <span className="ml-1 text-xs opacity-70">[Espacio]</span>
                     </Button>
                   </div>
                   <Timer />
@@ -349,7 +368,6 @@ const Game = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Left sidebar with player info */}
               <div className="space-y-4">
                 <Card className="bg-black/40 backdrop-blur-sm border-gray-800 text-game-light">
                   <CardHeader>
@@ -377,7 +395,6 @@ const Game = () => {
                 <PlayerInventory />
               </div>
               
-              {/* Game Map */}
               <div className="md:col-span-2">
                 <Map />
                 

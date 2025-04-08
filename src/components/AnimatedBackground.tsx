@@ -4,13 +4,13 @@ import React from "react";
 const AnimatedBackground: React.FC = () => {
   return (
     <section className="absolute w-full h-full flex justify-center items-center gap-0.5 flex-wrap overflow-hidden -z-10">
-      <style jsx>{`
+      <style>{`
         section {
           position: absolute;
           width: 100vw;
           height: 100vh;
           display: flex;
-          justify-content: center;
+          justify-center;
           align-items: center;
           gap: 2px;
           flex-wrap: wrap;
