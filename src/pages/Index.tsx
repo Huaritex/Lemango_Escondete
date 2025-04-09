@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GameProvider } from "@/contexts/GameContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Book, Gamepad, User, HelpCircle } from "lucide-react";
+import { Eye, EyeOff, Book, Gamepad, User, HelpCircle, PlayCircle } from "lucide-react";
 import AnimatedBackground from "@/components/AnimatedBackground";
 
 const Index = () => {
@@ -34,6 +34,13 @@ const Index = () => {
               </Button>
               
               <Button asChild variant="outline" className="w-full border-gray-700 text-gray-300 hover:text-white">
+                <Link to="/tutorial">
+                  <PlayCircle className="mr-2 h-4 w-4" />
+                  Video Tutorial
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" className="w-full border-gray-700 text-gray-300 hover:text-white">
                 <Link to="/instructions">
                   <Book className="mr-2 h-4 w-4" />
                   Instrucciones
@@ -44,13 +51,6 @@ const Index = () => {
                 <Link to="/customize">
                   <User className="mr-2 h-4 w-4" />
                   Personalizar
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" className="w-full border-gray-700 text-gray-300 hover:text-white">
-                <Link to="/game">
-                  <HelpCircle className="mr-2 h-4 w-4" />
-                  Tutorial Rápido
                 </Link>
               </Button>
             </CardContent>

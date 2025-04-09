@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Game from "./pages/Game";
 import Instructions from "./pages/Instructions";
 import Customize from "./pages/Customize";
+import Tutorial from "./pages/Tutorial";
 import NotFound from "./pages/NotFound";
 import { GameProvider } from "./contexts/GameContext";
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/game" element={<Game />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/customize" element={<Customize />} />
+            <Route path="/tutorial" element={<Tutorial />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
