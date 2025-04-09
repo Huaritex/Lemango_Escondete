@@ -5,7 +5,7 @@ import { PlayerState } from "@/contexts/GameContext";
 interface CellProps {
   x: number;
   y: number;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   players: PlayerState[];
 }
 
@@ -32,8 +32,14 @@ const Cell: React.FC<CellProps> = ({ x, y, onClick, players }) => {
   
   cellStyle += " hover:bg-gray-500 cursor-pointer";
   
+  const handleClick = (e: React.MouseEvent) => {
+    // Prevent default browser behavior
+    e.preventDefault();
+    onClick(e);
+  };
+  
   return (
-    <div className={cellStyle} onClick={onClick}>
+    <div className={cellStyle} onClick={handleClick}>
       {hasPlayer ? (
         <div className={`text-2xl animate-pulse-player text-${players[0].color}`}>
           {players[0].avatar}

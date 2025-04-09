@@ -7,7 +7,10 @@ const Map: React.FC = () => {
   const { mapSize, players, currentPlayer, movePlayer } = useGame();
   const { width, height } = mapSize;
   
-  const handleCellClick = (x: number, y: number) => {
+  const handleCellClick = (e: React.MouseEvent, x: number, y: number) => {
+    // Prevent default browser behavior
+    e.preventDefault();
+    
     // Only allow moving one cell at a time (except when speed boost is active)
     const player = players[currentPlayer];
     const currentPos = player.position;
@@ -37,7 +40,7 @@ const Map: React.FC = () => {
             key={`${x}-${y}`} 
             x={x} 
             y={y} 
-            onClick={() => handleCellClick(x, y)}
+            onClick={(e) => handleCellClick(e, x, y)}
             players={playersOnCell}
           />
         );
