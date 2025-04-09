@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -77,7 +76,7 @@ const Game = () => {
           <ul className="list-disc pl-5 space-y-2">
             <li>Un jugador será el <span className="text-game-hider font-medium">Escondido</span> y otro el <span className="text-game-seeker font-medium">Buscador</span>.</li>
             <li>El juego termina cuando el buscador encuentra al escondido o después de 16 turnos (8 minutos).</li>
-            <li>Cada turno dura 30 segundos.</li>
+            <li>Cada turno dura 18 segundos.</li>
           </ul>
         </div>
       )
@@ -322,7 +321,7 @@ const Game = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm">
-                Cada turno dura 30 segundos. Los jugadores pueden moverse una casilla por turno en cualquier dirección (horizontal o vertical).
+                Cada turno dura 18 segundos. Los jugadores pueden moverse una casilla por turno en cualquier dirección (horizontal o vertical).
               </p>
               <p className="text-sm">
                 Compra objetos en la tienda para ayudarte en tu misión. El escondido comienza en la esquina superior izquierda y el buscador en la esquina inferior derecha.
@@ -419,7 +418,7 @@ const Game = () => {
                         <CardContent className="space-y-2 text-sm">
                           <p>• El escondido debe evitar ser encontrado durante 16 turnos (8 minutos).</p>
                           <p>• El buscador debe encontrar al escondido antes de que se acaben los turnos.</p>
-                          <p>• Cada turno dura 30 segundos.</p>
+                          <p>• Cada turno dura 18 segundos.</p>
                           <p>• Los jugadores se mueven 1 casilla por turno (horizontal o vertical).</p>
                           <p>• Usa la tienda para comprar objetos que te ayuden.</p>
                         </CardContent>

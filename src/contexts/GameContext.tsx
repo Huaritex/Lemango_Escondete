@@ -96,8 +96,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const [gamePhase, setGamePhase] = useState<GamePhase>("setup");
   const [currentTurn, setCurrentTurn] = useState(1);
-  const [turnTimeLeft, setTurnTimeLeft] = useState(30); // 30 seconds per turn
-  const [maxTurns, setMaxTurns] = useState(16); // 8 minutes in total (30s * 16 turns)
+  const [turnTimeLeft, setTurnTimeLeft] = useState(18); // Changed from 30 to 18 seconds per turn
+  const [maxTurns, setMaxTurns] = useState(16); // 8 minutes in total (with 18s per turn, total time reduced)
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState(0); // Index of current player
   const [mapSize] = useState({ width: 10, height: 10 });
@@ -139,7 +139,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         setTurnTimeLeft((prev) => {
           if (prev <= 1) {
             endTurn();
-            return 30; // Reset timer for next turn
+            return 18; // Reset timer to 18 seconds for next turn
           }
           return prev - 1;
         });
@@ -208,7 +208,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const startGame = () => {
     setGamePhase("playing");
     setCurrentTurn(1);
-    setTurnTimeLeft(30);
+    setTurnTimeLeft(18); // Changed from 30 to 18 seconds
     setCurrentPlayer(0); // Hider starts
   };
   
@@ -232,7 +232,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     
     setGamePhase("setup");
     setCurrentTurn(1);
-    setTurnTimeLeft(30);
+    setTurnTimeLeft(18);
     setCurrentPlayer(0);
     
     // Reset player positions
@@ -283,7 +283,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     // Update turn counter and switch player
     setCurrentTurn(prev => prev + 1);
     setCurrentPlayer(prev => (prev + 1) % players.length);
-    setTurnTimeLeft(30); // Reset timer
+    setTurnTimeLeft(18); // Reset timer to 18 seconds
     
     toast({
       title: "Cambio de turno",

@@ -8,8 +8,8 @@ const Timer: React.FC = () => {
   const [progressValue, setProgressValue] = useState(100);
   
   useEffect(() => {
-    // Convert seconds to percentage
-    setProgressValue((turnTimeLeft / 30) * 100);
+    // Convert seconds to percentage (based on 18 seconds total)
+    setProgressValue((turnTimeLeft / 18) * 100);
   }, [turnTimeLeft]);
   
   const playerColor = players[currentPlayer].role === "hider" 
