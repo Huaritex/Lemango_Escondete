@@ -1,44 +1,73 @@
-# Welcome to your Lovable project
+# Lemango Escóndete 🎮
 
-## Project info
+¡Bienvenido a Lemango Escóndete! Un emocionante juego de escondite por turnos donde un jugador se esconde y otro lo busca.
 
-**URL**: https://lovable.dev/projects/24193f3e-185d-4bea-9bbe-caf439e8ef06
+## 🎯 Características del Juego
 
-## How can I edit this code?
+- **Jugabilidad por Turnos**: Partidas de 16 turnos (8 minutos)
+- **Dos Roles**: Escondido y Buscador
+- **Sistema de Objetos**: Tienda con objetos especiales
+- **Interfaz Moderna**: Diseño intuitivo y atractivo
 
-There are several ways of editing your application.
+## 🚀 Tecnologías Utilizadas
 
-**Use Lovable**
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- Shadcn/ui
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/24193f3e-185d-4bea-9bbe-caf439e8ef06) and start prompting.
+## 📋 Requisitos Previos
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js (versión 18 o superior)
+- npm (incluido con Node.js)
 
-**Use your preferred IDE**
+## 🛠️ Instalación
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clona el repositorio:
+```bash
+git clone <URL_DEL_REPOSITORIO>
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. Navega al directorio del proyecto:
+```bash
+cd Lemango_Escondete
+```
 
-Follow these steps:
+3. Instala las dependencias:
+```bash
+npm install
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Inicia el servidor de desarrollo:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🎮 Cómo Jugar
 
-- Navigate to the desired file(s).
+1. El Escondido comienza en la esquina superior izquierda
+2. El Buscador comienza en la esquina inferior derecha
+3. Cada jugador tiene 30 segundos por turno
+4. Muévete una casilla por turno (horizontal o vertical)
+5. Usa la tienda para comprar objetos especiales
+6. Presiona Espacio para saltar tu turno
+
+## 🏆 Objetivos
+
+- **Escondido**: Sobrevive durante los 16 turnos sin ser encontrado
+- **Buscador**: Encuentra al escondido antes de que se acaben los turnos
+
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 👥 Contribuir
+
+Las contribuciones son bienvenidas. Por favor, abre un issue primero para discutir los cambios que te gustaría hacer.
+
+---
+
+Desarrollado con ❤️ por [Tu Nombre]
 - Click the "Edit" button (pencil icon) at the top right of the file view.
 - Make your changes and commit the changes.
 
