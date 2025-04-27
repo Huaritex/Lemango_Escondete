@@ -11,6 +11,8 @@ import Customize from "./pages/Customize";
 import Tutorial from "./pages/Tutorial";
 import NotFound from "./pages/NotFound";
 import { GameProvider } from "./contexts/GameContext";
+import { RoomProvider } from "./contexts/RoomContext";
+import Lobby from "./pages/Lobby";
 
 const queryClient = new QueryClient();
 
@@ -19,18 +21,21 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <GameProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/game" element={<Game />} />
-            <Route path="/instructions" element={<Instructions />} />
-            <Route path="/customize" element={<Customize />} />
-            <Route path="/tutorial" element={<Tutorial />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </GameProvider>
+      <RoomProvider>
+        <GameProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/lobby" element={<Lobby />} />
+              <Route path="/game" element={<Game />} />
+              <Route path="/instructions" element={<Instructions />} />
+              <Route path="/customize" element={<Customize />} />
+              <Route path="/tutorial" element={<Tutorial />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </GameProvider>
+      </RoomProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -27,9 +27,9 @@ const Index = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <Button asChild className="w-full bg-gradient-to-r from-game-hider to-game-seeker hover:opacity-90">
-                <Link to="/game">
+                <Link to="/lobby">
                   <Gamepad className="mr-2 h-4 w-4" />
-                  Jugar
+                  Crear Sala
                 </Link>
               </Button>
               
@@ -66,9 +66,7 @@ const Index = () => {
             </CardFooter>
           </Card>
           
-          <p className="text-xs text-center text-gray-500">
-            Desarrollado por Lovable - v1.0 - 2023
-          </p>
+
         </div>
       </div>
     </GameProvider>

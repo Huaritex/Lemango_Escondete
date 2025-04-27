@@ -41,8 +41,12 @@ const Cell: React.FC<CellProps> = ({ x, y, onClick, players }) => {
   return (
     <div className={cellStyle} onClick={handleClick}>
       {hasPlayer ? (
-        <div className={`text-2xl animate-pulse-player text-${players[0].color}`}>
-          {players[0].avatar}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-${players[0].color} text-white text-lg font-bold overflow-hidden border-2 border-white shadow-md`}>
+          {players[0].image ? (
+            <img src={players[0].image} alt={players[0].name} className="w-full h-full object-cover" />
+          ) : (
+            <span>{players[0].avatar}</span>
+          )}
         </div>
       ) : (
         <span className="text-xs text-gray-400 opacity-30">{`${x},${y}`}</span>

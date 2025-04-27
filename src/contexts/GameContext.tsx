@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 // Game types and interfaces
@@ -23,6 +23,7 @@ export interface PlayerState {
   points: number;
   avatar: string;
   color: string;
+  image?: string | null; // Añadir campo opcional para la imagen
   visible: boolean;
   items: Item[];
   activeItems: { [key: string]: boolean };
@@ -45,7 +46,7 @@ interface GameContextType {
   endTurn: () => void;
   buyItem: (playerId: string, itemId: string) => void;
   useItem: (playerId: string, itemId: string) => void;
-  updatePlayerAvatar: (playerId: string, avatar: string, color: string) => void;
+  updatePlayerCustomization: (playerId: string, name: string, avatar: string, color: string, image: string | null) => void; // Actualizar firma
   resetGame: () => void;
 }
 
@@ -112,6 +113,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       points: 100,
       avatar: "👤",
       color: "game-hider",
+      image: null, // Inicializar imagen
       visible: false,
       items: [],
       activeItems: {},
@@ -125,12 +127,28 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       points: 100,
       avatar: "👁️",
       color: "game-seeker",
+      image: null, // Inicializar imagen
       visible: true,
       items: [],
       activeItems: {},
       cooldowns: {}
     }
   ]);
+
+  // Define endTurn with useCallback to avoid dependency issues
+  const endTurn = useCallback(() => {
+    if (timerInterval) clearInterval(timerInterval);
+    
+    // Update turn counter and switch player
+    setCurrentTurn(prev => prev + 1);
+    setCurrentPlayer(prev => (prev + 1) % players.length);
+    setTurnTimeLeft(18); // Reset timer to 18 seconds
+    
+    toast({
+      title: "Cambio de turno",
+      description: `Turno del ${players[(currentPlayer + 1) % players.length].role === "hider" ? "Escondido" : "Buscador"}`,
+    });
+  }, [timerInterval, players, currentPlayer, toast]);
 
   // Timer effect for turn management
   useEffect(() => {
@@ -151,7 +169,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         if (interval) clearInterval(interval);
       };
     }
-  }, [gamePhase, currentPlayer]);
+  }, [gamePhase, currentPlayer, endTurn]);
 
   // Handle cooldowns
   useEffect(() => {
@@ -235,18 +253,35 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setTurnTimeLeft(18);
     setCurrentPlayer(0);
     
-    // Reset player positions
+    // Reset player positions, visibility, items, cooldowns, name, and image
     setPlayers(prevPlayers => {
       return prevPlayers.map(player => {
         const initialPosition = player.role === "hider" ? { x: 1, y: 1 } : { x: 8, y: 8 };
+        const initialName = player.role === "hider" ? "Escondido" : "Buscador";
+        const initialAvatar = player.role === "hider" ? "👤" : "👁️";
+        const initialColor = player.role === "hider" ? "game-hider" : "game-seeker";
         return {
           ...player,
           position: initialPosition,
           visible: player.role === "seeker", // Hider is invisible by default
           activeItems: {},
-          cooldowns: {}
+          cooldowns: {},
+          items: [], // Also reset items
+          points: 100, // Reset points if needed, or keep them
+          name: initialName, // Reset name
+          avatar: initialAvatar, // Reset avatar
+          color: initialColor, // Reset color
+          image: null // Reset image
         };
       });
+    });
+
+    // Reset store items availability if needed
+    // setStoreItems(defaultStoreItems);
+
+    toast({
+      title: "Juego Reiniciado",
+      description: "La partida ha sido reiniciada. ¡Prepara tu estrategia!",
     });
   };
 
@@ -277,19 +312,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const endTurn = () => {
-    if (timerInterval) clearInterval(timerInterval);
-    
-    // Update turn counter and switch player
-    setCurrentTurn(prev => prev + 1);
-    setCurrentPlayer(prev => (prev + 1) % players.length);
-    setTurnTimeLeft(18); // Reset timer to 18 seconds
-    
-    toast({
-      title: "Cambio de turno",
-      description: `Turno del ${players[(currentPlayer + 1) % players.length].role === "hider" ? "Escondido" : "Buscador"}`,
-    });
-  };
+  // La función endTurn ahora está definida con useCallback arriba
 
   const buyItem = (playerId: string, itemId: string) => {
     const item = storeItems.find(item => item.id === itemId);
@@ -301,7 +324,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       // Deduct points and add item to player's inventory
       setPlayers(prevPlayers => {
         return prevPlayers.map(p => {
-          if (p.id === playerId) {
+          if (p.id === playerId) { 
             return {
               ...p,
               points: p.points - item.cost,
@@ -389,14 +412,15 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const updatePlayerAvatar = (playerId: string, avatar: string, color: string) => {
-    setPlayers(prevPlayers => {
-      return prevPlayers.map(player => {
-        if (player.id === playerId) {
-          return { ...player, avatar, color };
-        }
-        return player;
-      });
+  const updatePlayerCustomization = (playerId: string, name: string, avatar: string, color: string, image: string | null) => {
+    setPlayers(prevPlayers =>
+      prevPlayers.map(player =>
+        player.id === playerId ? { ...player, name, avatar, color, image } : player
+      )
+    );
+    toast({
+      title: "Personalización guardada",
+      description: `Se actualizó la configuración para ${name}.`,
     });
   };
 
@@ -416,7 +440,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     endTurn,
     buyItem,
     useItem,
-    updatePlayerAvatar,
+    updatePlayerCustomization, // Añadir la nueva función al contexto
     resetGame
   };
 

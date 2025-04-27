@@ -1,11 +1,49 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useGame, PlayerPosition } from "@/contexts/GameContext";
 import Cell from "./Cell";
 
 const Map: React.FC = () => {
   const { mapSize, players, currentPlayer, movePlayer } = useGame();
   const { width, height } = mapSize;
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      const player = players[currentPlayer];
+      const currentPos = player.position;
+      let newPos: PlayerPosition | null = null;
+
+      switch (e.key.toLowerCase()) {
+        case 'w':
+        case 'arrowup':
+          newPos = { x: currentPos.x, y: currentPos.y - 1 };
+          break;
+        case 's':
+        case 'arrowdown':
+          newPos = { x: currentPos.x, y: currentPos.y + 1 };
+          break;
+        case 'a':
+        case 'arrowleft':
+          newPos = { x: currentPos.x - 1, y: currentPos.y };
+          break;
+        case 'd':
+        case 'arrowright':
+          newPos = { x: currentPos.x + 1, y: currentPos.y };
+          break;
+      }
+
+      if (newPos && 
+          newPos.x >= 0 && 
+          newPos.x < width && 
+          newPos.y >= 0 && 
+          newPos.y < height) {
+        movePlayer(player.id, newPos);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [currentPlayer, players, width, height, movePlayer]);
   
   const handleCellClick = (e: React.MouseEvent, x: number, y: number) => {
     // Prevent default browser behavior
