@@ -67,4 +67,4 @@ Las contribuciones son bienvenidas. Por favor, abre un issue primero para discut
 
 ---
 
-Desarrollado con ❤️ por [Tu Nombre]
+Desarrollado con ❤️ por Huaritex
