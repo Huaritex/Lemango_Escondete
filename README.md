@@ -25,7 +25,7 @@
 
 1. Clona el repositorio:
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone https://github.com/Huaritex/Lemango_Escondete.git
 ```
 
 2. Navega al directorio del proyecto:
