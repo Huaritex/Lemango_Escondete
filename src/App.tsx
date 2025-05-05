@@ -2,6 +2,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import AnimatedBackground from "@/components/AnimatedBackground";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
@@ -24,15 +25,18 @@ const App = () => (
       <RoomProvider>
         <GameProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/lobby" element={<Lobby />} />
-              <Route path="/game" element={<Game />} />
-              <Route path="/instructions" element={<Instructions />} />
-              <Route path="/customize" element={<Customize />} />
-              <Route path="/tutorial" element={<Tutorial />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <div className="app-container">
+              <AnimatedBackground />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/lobby" element={<Lobby />} />
+                <Route path="/game" element={<Game />} />
+                <Route path="/instructions" element={<Instructions />} />
+                <Route path="/customize" element={<Customize />} />
+                <Route path="/tutorial" element={<Tutorial />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
           </BrowserRouter>
         </GameProvider>
       </RoomProvider>

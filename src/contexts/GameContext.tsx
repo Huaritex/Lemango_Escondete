@@ -144,6 +144,27 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setCurrentPlayer(prev => (prev + 1) % players.length);
     setTurnTimeLeft(18); // Reset timer to 18 seconds
     
+    // Dar 50 monedas a ambos jugadores al final de cada turno
+    setPlayers(prevPlayers => {
+      return prevPlayers.map(player => ({
+        ...player,
+        points: player.points + 50
+      }));
+    });
+
+    // Mostrar ubicación del escondido al buscador al inicio de su turno
+    const nextPlayerIndex = (currentPlayer + 1) % players.length;
+    const nextPlayer = players[nextPlayerIndex];
+    if (nextPlayer.role === "seeker") {
+      const hider = players.find(p => p.role === "hider");
+      if (hider) {
+        toast({
+          title: "Escaneo del mapa",
+          description: `El escondido está en la posición (${hider.position.x + 1}, ${hider.position.y + 1})`,
+        });
+      }
+    }
+    
     toast({
       title: "Cambio de turno",
       description: `Turno del ${players[(currentPlayer + 1) % players.length].role === "hider" ? "Escondido" : "Buscador"}`,
@@ -157,7 +178,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         setTurnTimeLeft((prev) => {
           if (prev <= 1) {
             endTurn();
-            return 18; // Reset timer to 18 seconds for next turn
+            return 18; //reseteo de contador de turno 
           }
           return prev - 1;
         });

@@ -1,50 +1,45 @@
-import React, { useState } from 'react';
-import { useNetwork } from '@/contexts/NetworkContext';
+import React from 'react';
 import { useRoom } from '@/contexts/RoomContext';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
+import { toast } from '@/components/ui/use-toast';
 
 const NetworkManager: React.FC = () => {
-  const { networkState, startHosting, joinGame } = useNetwork();
-  const { currentRoom } = useRoom();
-  const [hostId, setHostId] = useState('');
+  const { currentRoom, createRoom, joinRoom, leaveRoom, wsConnected } = useRoom();
 
-  const handleStartHosting = async () => {
+  const handleCreateRoom = async () => {
     try {
-      const peerId = await startHosting();
-      toast.success('Sala creada exitosamente', {
-        description: `Tu ID de conexión es: ${peerId}`
+      await createRoom('Sala de Juego');
+      toast({
+        title: 'Sala creada',
+        description: 'Esperando a otro jugador...'
       });
     } catch (error) {
-      toast.error('Error al crear la sala', {
-        description: 'Por favor, intenta nuevamente'
+      toast({
+        title: 'Error',
+        description: 'No se pudo crear la sala',
+        variant: 'destructive'
       });
     }
   };
 
-  const handleJoinGame = async () => {
-    if (!hostId.trim()) {
-      toast.error('ID de conexión inválido', {
-        description: 'Por favor, ingresa un ID válido'
-      });
-      return;
-    }
-
+  const handleJoinRoom = async () => {
     try {
-      await joinGame(hostId);
-      toast.success('Conectado exitosamente', {
-        description: 'Te has unido a la partida'
-      });
+      const joined = await joinRoom();
+      if (joined) {
+        toast({
+          title: 'Conectado',
+          description: 'Te has unido a la sala'
+        });
+      }
     } catch (error) {
-      toast.error('Error al unirse a la partida', {
-        description: 'Por favor, verifica el ID e intenta nuevamente'
+      toast({
+        title: 'Error',
+        description: 'No se pudo unir a la sala',
+        variant: 'destructive'
       });
     }
   };
-
-  if (!currentRoom) return null;
 
   return (
     <Card className="bg-black/40 backdrop-blur-sm border-gray-800 text-game-light">
@@ -52,39 +47,36 @@ const NetworkManager: React.FC = () => {
         <CardTitle>Conexión Local</CardTitle>
       </CardHeader>
       <CardContent>
-        {!networkState.isConnected ? (
+        {!wsConnected ? (
           <div className="space-y-4">
-            <div>
-              <Button
-                onClick={handleStartHosting}
-                className="w-full bg-gradient-to-r from-game-hider to-game-seeker hover:opacity-90"
-              >
-                Crear Partida Local
-              </Button>
-            </div>
-            <div className="space-y-2">
-              <Input
-                placeholder="Ingresa el ID de la partida"
-                value={hostId}
-                onChange={(e) => setHostId(e.target.value)}
-              />
-              <Button
-                onClick={handleJoinGame}
-                className="w-full"
-                disabled={!hostId.trim()}
-              >
-                Unirse a Partida Local
-              </Button>
-            </div>
+            <Button
+              onClick={handleCreateRoom}
+              className="w-full bg-gradient-to-r from-game-hider to-game-seeker hover:opacity-90"
+            >
+              Crear Sala
+            </Button>
+            <Button
+              onClick={handleJoinRoom}
+              className="w-full"
+            >
+              Unirse a Sala
+            </Button>
           </div>
         ) : (
           <div className="space-y-2">
             <p className="text-sm">
-              Estado: {networkState.isHost ? 'Anfitrión' : 'Conectado'}
+              Estado: {currentRoom?.players.length === 2 ? 'Sala Llena' : 'Esperando Jugador'}
             </p>
             <p className="text-sm">
-              Jugadores conectados: {networkState.connections.length + 1}
+              Jugadores: {currentRoom?.players.length || 1}/2
             </p>
+            <Button
+              onClick={leaveRoom}
+              variant="destructive"
+              className="w-full mt-4"
+            >
+              Salir
+            </Button>
           </div>
         )}
       </CardContent>
